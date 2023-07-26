@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(sfp)
+library(psf)
 
-test_check("sfp")
+test_check("psf")

@@ -1,11 +1,18 @@
-test_that("st_buffer_p works", {
+test_that("pst_buffer works", {
   library(sf)
   library(furrr)
-  l1 = st_as_sfc("LINESTRING(0 0,1 5,4 5,5 2,8 2,9 4,4 6.5)")
-  buff <- st_buffer(l1, dist = 1)
+
+  nc = st_read(system.file("shape/nc.shp", package="sf")) |>
+    st_transform(3857)
+  buff <- st_buffer(nc, dist = 1)
 
   plan(cluster, workers = 2)
-  buffp <- pst_buffer(l1, dist = 1)
+  buffp <- pst_buffer(nc, dist = 1)
   plan(sequential)
-  expect_in("sfc", class(buffp))
+  expect_in("sf", class(buffp))
+
+  diff <- st_difference(st_union(buff), st_union(buffp)) |>
+    suppressMessages()
+
+  expect_equal(buff, buffp)
 })
